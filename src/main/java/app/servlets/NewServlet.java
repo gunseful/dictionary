@@ -9,7 +9,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 
 public class NewServlet extends HttpServlet {
     @Override
@@ -22,7 +22,7 @@ public class NewServlet extends HttpServlet {
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 
         Word word = new Word(
-                new String(req.getParameter("russian").getBytes("ISO-8859-1"), Charset.forName("UTF-8")),
+                new String(req.getParameter("russian").getBytes(StandardCharsets.ISO_8859_1), StandardCharsets.UTF_8),
                 req.getParameter("spanish"),
                 req.getParameter("english"),
                 req.getParameter("french"));

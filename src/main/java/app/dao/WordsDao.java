@@ -21,12 +21,7 @@ public class WordsDao {
             preparedStatement.executeQuery();
             ResultSet resultSet = preparedStatement.getResultSet();
             while(resultSet.next()){
-                list.add(new Word(
-                        resultSet.getInt("id"),
-                        resultSet.getString("russian"),
-                        resultSet.getString("spanish"),
-                        resultSet.getString("english"),
-                        resultSet.getString("french")));
+                list.add(parseWord(resultSet));
             }
         } catch (SQLException e) {
             e.printStackTrace();
@@ -80,12 +75,7 @@ public class WordsDao {
             preparedStatement.executeQuery();
             ResultSet resultSet = preparedStatement.getResultSet();
             while(resultSet.next()){
-                wordFromDb = new Word(
-                        resultSet.getInt("id"),
-                        resultSet.getString("russian"),
-                        resultSet.getString("spanish"),
-                        resultSet.getString("english"),
-                        resultSet.getString("french"));
+                wordFromDb = parseWord(resultSet);
             }
         } catch (InterruptedException | SQLException e) {
             e.printStackTrace();
@@ -95,29 +85,22 @@ public class WordsDao {
         return wordFromDb;
     }
 
-    public Word getRussian(String word) throws InterruptedException {
-        return getWord(word, "SELECT * FROM dictionary.words where russian=?");
-    }
-
-    public Word getEnglish(String word) throws InterruptedException {
-        return getWord(word, "SELECT * FROM dictionary.words where english=?");
-    }
-
-    public Word getSpanish(String word) throws InterruptedException {
-        return getWord(word, "SELECT * FROM dictionary.words where spanish=?");
-    }
-
-    public Word getFrench(String word) throws InterruptedException {
-        return getWord(word, "SELECT * FROM dictionary.words where french=?");
-    }
-
     public Word getWordByLanguage(String word, String language) throws InterruptedException {
         switch (language){
-            case "russian" : return getRussian(word);
-            case "english" : return getEnglish(word);
-            case "spanish" : return getSpanish(word);
-            case "french" : return getFrench(word);
+            case "russian" : return getWord(word, "SELECT * FROM dictionary.words where russian=?");
+            case "english" : return getWord(word, "SELECT * FROM dictionary.words where english=?");
+            case "spanish" : return getWord(word, "SELECT * FROM dictionary.words where spanish=?");
+            case "french" : return getWord(word, "SELECT * FROM dictionary.words where french=?");
             default: return null;
         }
+    }
+
+    private Word parseWord(ResultSet resultSet) throws SQLException {
+        return new Word(
+                resultSet.getInt("id"),
+                resultSet.getString("russian"),
+                resultSet.getString("spanish"),
+                resultSet.getString("english"),
+                resultSet.getString("french"));
     }
 }
