@@ -1,7 +1,6 @@
 package app.servlets;
 
-import app.dao.WordsDao;
-import entity.Word;
+import app.service.WordService;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -20,42 +19,21 @@ public class TranslatorServlet extends HttpServlet {
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        req.getParameter("first");
-        System.out.println(req.getParameter("first"));
-        String secondLanguage = req.getParameter("second");
-        System.out.println(req.getParameter("second"));
-        req.getParameter("wordToTranslate");
 
-        WordsDao wordsDao = new WordsDao();
-        Word wordFromDb = null;
-        try {
-            wordFromDb = wordsDao.getWordByLanguage(req.getParameter("wordToTranslate"), req.getParameter("first"));
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
+        WordService wordService = new WordService();
+        String word = wordService.translateWord(
+                req.getParameter("first"),
+                req.getParameter("second"),
+                req.getParameter("wordToTranslate")
+        );
 
-        if(wordFromDb==null){
+
+        if(word==null){
             req.setAttribute("word", "can't find");
             doGet(req,resp);
         }
 
-
-        switch (secondLanguage){
-            case "russian" :
-                req.setAttribute("word", wordFromDb.getRussian());
-                break;
-            case "english" :
-                req.setAttribute("word", wordFromDb.getEnglish());
-                break;
-
-            case "spanish" :
-                req.setAttribute("word", wordFromDb.getSpanish());
-                break;
-
-            case "french" :
-                req.setAttribute("word", wordFromDb.getFrench());
-                break;
-        }
+        req.setAttribute("word", word);
 
         doGet(req, resp);
 
