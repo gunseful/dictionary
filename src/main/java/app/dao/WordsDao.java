@@ -1,6 +1,8 @@
 package app.dao;
 
 import entity.Word;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -10,6 +12,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class WordsDao {
+
+    private static Logger logger = LogManager.getLogger(WordsDao.class);
 
     private ConnectionPool connectionPool = ConnectionPool.getConnectionPool();
 
@@ -24,7 +28,7 @@ public class WordsDao {
                 list.add(parseWord(resultSet));
             }
         } catch (SQLException e) {
-            e.printStackTrace();
+            logger.error("Server can't get all words from DB", e);
         }finally {
             connectionPool.returnConnection(connection);
         }

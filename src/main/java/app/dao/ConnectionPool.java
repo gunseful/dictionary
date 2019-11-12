@@ -1,13 +1,22 @@
 package app.dao;
 
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.sql.*;
-import java.util.Properties;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.SQLException;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
 
+
 public class ConnectionPool {
+
+    private static Logger logger = LogManager.getLogger(ConnectionPool.class);
+
+    private static final String DB_URL = "jdbc:mysql://localhost:3306/fantasticfour?allowPublicKeyRetrieval=true&serverTimezone=Europe/Moscow&useSSL=false";
+    private static final String DB_LOGIN = "root";
+    private static final String DB_PASSWORD = "ce97a50f";
 
     public static ConnectionPool connectionPool;
 
@@ -24,12 +33,12 @@ public class ConnectionPool {
         for (int i = 0; i < 5; i++) {
             try {
                 Class.forName("com.mysql.jdbc.Driver");
-                Properties properties = new Properties();
-                FileInputStream fileInputStream = new FileInputStream("C:\\Users\\Ares\\IdeaProjects\\dictionary\\src\\main\\resources\\connection.properties");
-                properties.load(fileInputStream);
-                Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/fantasticfour?allowPublicKeyRetrieval=true&serverTimezone=Europe/Moscow&useSSL=false", properties);
+                Connection connection = DriverManager.getConnection(DB_URL, DB_LOGIN, DB_PASSWORD);
                 blockingQueue.put(connection);
-            } catch (InterruptedException | ClassNotFoundException | SQLException | IOException e) {
+                logger.info("Start new connection");
+                logger.info("Count of free connections = {}", blockingQueue.size());
+
+            } catch (InterruptedException | ClassNotFoundException | SQLException e) {
                 e.printStackTrace();
             }
         }
