@@ -18,7 +18,7 @@ public class ConnectionPool {
     private static final String DB_LOGIN = "root";
     private static final String DB_PASSWORD = "ce97a50f";
 
-    public static ConnectionPool connectionPool;
+    private static ConnectionPool connectionPool;
 
     private BlockingQueue<Connection> blockingQueue = new LinkedBlockingQueue<>();
 
