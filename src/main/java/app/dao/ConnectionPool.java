@@ -17,9 +17,7 @@ public class ConnectionPool {
     private static final String DB_URL = "jdbc:mysql://localhost:3306/fantasticfour?allowPublicKeyRetrieval=true&serverTimezone=Europe/Moscow&useSSL=false";
     private static final String DB_LOGIN = "root";
     private static final String DB_PASSWORD = "ce97a50f";
-
     private static ConnectionPool connectionPool;
-
     private BlockingQueue<Connection> blockingQueue = new LinkedBlockingQueue<>();
 
     public static ConnectionPool getConnectionPool(){
