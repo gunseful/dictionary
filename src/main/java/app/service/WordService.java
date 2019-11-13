@@ -4,14 +4,22 @@ import app.dao.WordsDao;
 import entity.Word;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.springframework.context.ApplicationContext;
+import org.springframework.stereotype.Service;
 
 import java.util.Collections;
 import java.util.List;
 
+@Service
 public class WordService {
 
-    private WordsDao wordsDao = new WordsDao();
+    private final WordsDao wordsDao;
+
     private static Logger logger = LogManager.getLogger(WordsDao.class);
+
+    public WordService(ApplicationContext applicationContext) {
+        this.wordsDao = applicationContext.getBean(WordsDao.class);
+    }
 
     public void delete(int id){
         try {
